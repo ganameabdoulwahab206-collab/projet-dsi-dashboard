@@ -1,0 +1,38 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&family=Roboto:wght@300;400;500;700&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Roboto", sans-serif;
+  --font-heading: "Montserrat", sans-serif;
+
+  /* Couleurs Officielles (Drapeau) */
+  --color-gov-red: #EF2B2B;
+  --color-gov-yellow: #FCD116;
+  --color-gov-green: #009E49;
+
+  /* Palette Espace Public */
+  --color-public-dark: #00213B;
+  --color-public-blue: #1B384F;
+  --color-public-purple: #2C224E;
+  --color-public-light: #EAECEF;
+
+  /* Palette Espace Privé */
+  --color-private-green: #78CC99;
+  --color-private-orange: #F2AA3E;
+  --color-private-blue: #535FDD;
+  --color-private-light: #F0F0F7;
+}
+
+/* Styles globaux */
+body {
+  @apply bg-private-light text-slate-900 antialiased font-sans;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-heading;
+}
+
+button {
+  @apply font-heading;
+}
