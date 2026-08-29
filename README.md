@@ -70,9 +70,3 @@ npm install
 c
 ```
 Le frontend sera accessible (généralement) sur `http://localhost:5173`.
-
-## 📌 Prochaines étapes suggérées pour la continuité
-- Vérifier et tester la connectivité API <-> Frontend (CORS est déjà configuré pour `localhost:3000` et `5173`).
-- Poursuivre l'implémentation des interfaces utilisateurs manquantes (Login, Gestion des Projets, etc.).
-- Gérer le stockage sécurisé du token JWT côté frontend.
-- Améliorer la gestion des erreurs et les validations globales.
