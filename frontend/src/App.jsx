@@ -10,6 +10,10 @@ import ProjetsPage from './pages/ProjetsPage';
 import ProjetDetailPage from './pages/ProjetDetailPage';
 import TachesPage from './pages/TachesPage';
 import UtilisateursPage from './pages/UtilisateursPage';
+import DepartementsPage from './pages/DepartementsPage';
+import RapportsPage from './pages/RapportsPage';
+import ParametresPage from './pages/ParametresPage';
+import { Toaster } from 'react-hot-toast';
 
 /**
  * Composant Racine de l'application React.
@@ -19,6 +23,7 @@ import UtilisateursPage from './pages/UtilisateursPage';
 function App() {
   return (
     <AuthProvider>
+      <Toaster position="top-right" />
       <BrowserRouter>
         <Routes>
           {/* Route publique */}
@@ -38,10 +43,14 @@ function App() {
               <Route path="/taches" element={<TachesPage />} />
               
               {/* Rapports */}
-              <Route path="/rapports" element={<div className="p-6 text-center text-xl text-gray-500">Page Rapports (En construction)</div>} />
+              <Route path="/rapports" element={<RapportsPage />} />
 
-              {/* Utilisateurs — Directeur uniquement */}
+              {/* Administration — Directeur uniquement */}
               <Route path="/utilisateurs" element={<UtilisateursPage />} />
+              <Route path="/departements" element={<DepartementsPage />} />
+
+              {/* Paramètres — accessible à tous */}
+              <Route path="/parametres" element={<ParametresPage />} />
 
               {/* Redirection par défaut (racine) vers /dashboard */}
               <Route path="/" element={<Navigate to="/dashboard" replace />} />

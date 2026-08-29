@@ -57,7 +57,6 @@ public class TacheController {
      */
     @GetMapping("/projet/{projetId}")
     @Operation(summary = "Tâches d'un projet", description = "Liste toutes les tâches d'un projet donné")
-    @PreAuthorize("hasAnyRole('DIRECTEUR', 'CHEF_SERVICE')")
     public ResponseEntity<List<Tache>> getTachesParProjet(@PathVariable Long projetId) {
         return ResponseEntity.ok(tacheService.findByProjet(projetId));
     }

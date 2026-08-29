@@ -35,7 +35,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"projet", "utilisateur"}) // Éviter la récursion infinie
+@ToString(exclude = {"projet", "utilisateur"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Tache {
 
     /** Identifiant unique auto-généré */
@@ -83,14 +84,14 @@ public class Tache {
      * La tâche ne peut pas exister sans projet (relation obligatoire).
      * ManyToOne : plusieurs tâches peuvent appartenir au même projet.
      */
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(
             name = "projet_id",
             referencedColumnName = "id",
             nullable = false,
             foreignKey = @ForeignKey(name = "fk_tache_projet")
     )
-    @JsonIgnoreProperties({"taches", "departement"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "taches", "departement"})
     private Projet projet;
 
     /**
@@ -98,13 +99,13 @@ public class Tache {
      * ManyToOne : plusieurs tâches peuvent être assignées au même utilisateur.
      * optional = true : une tâche peut être non assignée (en attente d'affectation).
      */
-    @ManyToOne(fetch = FetchType.LAZY, optional = true)
+    @ManyToOne(fetch = FetchType.EAGER, optional = true)
     @JoinColumn(
             name = "utilisateur_id",
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "fk_tache_utilisateur")
     )
-    @JsonIgnoreProperties({"taches", "motDePasse", "departement"})
+    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler", "taches", "motDePasse", "departement", "authorities"})
     private Utilisateur utilisateur;
 
     // =========================================================================

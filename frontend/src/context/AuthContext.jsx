@@ -15,15 +15,45 @@ export const AuthProvider = ({ children }) => {
   // État de chargement initial (vérification du token existant)
   const [loading, setLoading] = useState(true);
 
-  // Vérifier le localStorage au démarrage (F5 / Refresh)
+  // Vérifier le localStorage au démarrage et synchroniser le profil depuis le backend
   useEffect(() => {
     const storedToken = localStorage.getItem('token');
     const storedUser = localStorage.getItem('user');
 
     if (storedToken && storedUser) {
-      setUser(JSON.parse(storedUser));
+      // Charger immédiatement depuis le localStorage (affichage instantané)
+      const parsedUser = JSON.parse(storedUser);
+      setUser(parsedUser);
+      setLoading(false); // Libérer l'écran immédiatement
+
+      // Synchroniser silencieusement le profil réel depuis le backend
+      api.get('/utilisateurs/me')
+        .then(response => {
+          const freshUser = response.data;
+          const normalized = {
+            ...parsedUser,
+            nom: freshUser.nom,
+            email: freshUser.email,
+            role: freshUser.role,
+            departement: freshUser.departement
+              ? { nom: freshUser.departement.nom, id: freshUser.departement.id }
+              : parsedUser.departement,
+          };
+          localStorage.setItem('user', JSON.stringify(normalized));
+          setUser(normalized);
+        })
+        .catch((error) => {
+          // Déconnecter UNIQUEMENT si le token est expiré/invalide (401)
+          if (error.response?.status === 401) {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            setUser(null);
+          }
+          // Pour toutes les autres erreurs (réseau, 500...), garder la session
+        });
+    } else {
+      setLoading(false);
     }
-    setLoading(false);
   }, []);
 
   /**

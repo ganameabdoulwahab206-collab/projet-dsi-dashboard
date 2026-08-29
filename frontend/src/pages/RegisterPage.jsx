@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useNavigate, Navigate, Link } from 'react-router-dom';
-import { Lock, Mail, AlertCircle, User, CheckCircle } from 'lucide-react';
+import { Lock, Mail, AlertCircle, User, CheckCircle, ArrowRight, UserPlus } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 /**
- * Page d'Inscription (Register).
- * Permet à un nouvel utilisateur de créer un compte et le redirige
- * automatiquement vers le tableau de bord en cas de succès.
+ * Page d'Inscription (Register) avec le logo officiel du Burkina Faso
+ * et un design 100% harmonisé avec la page de connexion.
  */
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -15,13 +14,12 @@ const RegisterPage = () => {
     motDePasse: '',
     confirmMotDePasse: ''
   });
-  const [errors, setErrors] = useState([]); // Liste des erreurs à afficher
+  const [errors, setErrors] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const { register, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
-  // Si l'utilisateur est déjà connecté, on le redirige directement
   if (isAuthenticated) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -35,7 +33,6 @@ const RegisterPage = () => {
     e.preventDefault();
     setErrors([]);
 
-    // Validation côté client (avant d'appeler le serveur)
     const clientErrors = [];
     if (!formData.nom.trim()) {
       clientErrors.push('Le nom complet est obligatoire.');
@@ -70,7 +67,6 @@ const RegisterPage = () => {
     if (result.success) {
       navigate('/dashboard');
     } else {
-      // Afficher les erreurs renvoyées par le backend
       if (result.details && result.details.length > 0) {
         setErrors(result.details);
       } else {
@@ -81,35 +77,41 @@ const RegisterPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-public-light px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8 rounded-2xl bg-white p-10 shadow-xl ring-1 ring-slate-200">
+    <div className="flex min-h-screen items-center justify-center bg-slate-100/70 px-4 py-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md space-y-6 rounded-3xl bg-white p-8 sm:p-10 shadow-xl ring-1 ring-slate-200/80">
 
-        {/* En-tête */}
+        {/* En-tête avec Logo Officiel du Burkina Faso */}
         <div className="text-center">
-          <img src="/logo.png" alt="Armoiries du Burkina Faso" className="mx-auto h-24 w-auto mb-6" />
-          <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-full bg-public-blue">
-            <User className="h-8 w-8 text-white" />
+          <div className="flex justify-center mb-3">
+            <img
+              src="/logo.png"
+              alt="Armoiries du Burkina Faso"
+              className="h-24 sm:h-28 w-auto object-contain drop-shadow-sm transition-transform hover:scale-105"
+            />
           </div>
-          <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-slate-900">
-            Créer un compte
-          </h2>
-          <p className="mt-2 text-sm text-slate-600">
-            Rejoignez le tableau de bord DSI
+          <h1 className="text-2xl font-extrabold font-montserrat text-blue-700">
+            DSI Dashboard
+          </h1>
+          <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-slate-500">
+            Ministère de la Santé · Burkina Faso
+          </p>
+          <p className="mt-1 text-xs text-slate-400">
+            Créer un nouveau compte d'accès
           </p>
         </div>
 
         {/* Bloc d'erreurs */}
         {errors.length > 0 && (
-          <div className="rounded-lg bg-red-50 p-4 ring-1 ring-red-200">
+          <div className="rounded-xl bg-red-50 p-4 ring-1 ring-red-200 animate-in fade-in">
             <div className="flex items-start space-x-3">
-              <AlertCircle className="h-5 w-5 flex-shrink-0 text-red-500 mt-0.5" />
+              <AlertCircle className="h-4 w-4 flex-shrink-0 text-red-500 mt-0.5" />
               <div>
-                <p className="text-sm font-semibold text-red-700 mb-1">
-                  {errors.length === 1 ? 'Veuillez corriger l\'erreur suivante :' : 'Veuillez corriger les erreurs suivantes :'}
+                <p className="text-xs font-bold text-red-800 mb-1">
+                  {errors.length === 1 ? 'Veuillez corriger cette erreur :' : 'Veuillez corriger les erreurs suivantes :'}
                 </p>
-                <ul className="list-disc list-inside space-y-1">
+                <ul className="list-disc list-inside space-y-0.5">
                   {errors.map((err, i) => (
-                    <li key={i} className="text-sm text-red-600">{err}</li>
+                    <li key={i} className="text-xs text-red-600">{err}</li>
                   ))}
                 </ul>
               </div>
@@ -117,134 +119,116 @@ const RegisterPage = () => {
           </div>
         )}
 
-        {/* Formulaire */}
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit} noValidate>
-          <div className="space-y-4 rounded-md shadow-sm">
-
-            {/* Champ Nom */}
-            <div>
-              <label htmlFor="nom" className="sr-only">Nom complet</label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <User className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  id="nom"
-                  name="nom"
-                  type="text"
-                  autoComplete="name"
-                  required
-                  className="block w-full rounded-lg border-0 py-2.5 pl-10 pr-3 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-public-blue sm:text-sm sm:leading-6"
-                  placeholder="Nom complet (ex: Mohammed Alami)"
-                  value={formData.nom}
-                  onChange={handleChange}
-                />
+        {/* Formulaire d'Inscription */}
+        <form className="space-y-4" onSubmit={handleSubmit} noValidate>
+          {/* Champ Nom */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Nom complet *</label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                <User className="h-4 w-4 text-slate-400" />
               </div>
-            </div>
-
-            {/* Champ Email */}
-            <div>
-              <label htmlFor="email" className="sr-only">Adresse Email</label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Mail className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  autoComplete="email"
-                  required
-                  className="block w-full rounded-lg border-0 py-2.5 pl-10 pr-3 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-public-blue sm:text-sm sm:leading-6"
-                  placeholder="Adresse Email (ex: agent@sante.gov.ma)"
-                  value={formData.email}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            {/* Champ Mot de passe */}
-            <div>
-              <label htmlFor="motDePasse" className="sr-only">Mot de passe</label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Lock className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  id="motDePasse"
-                  name="motDePasse"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  className="block w-full rounded-lg border-0 py-2.5 pl-10 pr-3 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-public-blue sm:text-sm sm:leading-6"
-                  placeholder="Mot de passe (min. 6 caractères)"
-                  value={formData.motDePasse}
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            {/* Champ Confirmation mot de passe */}
-            <div>
-              <label htmlFor="confirmMotDePasse" className="sr-only">Confirmer le mot de passe</label>
-              <div className="relative">
-                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-                  <Lock className="h-5 w-5 text-slate-400" />
-                </div>
-                <input
-                  id="confirmMotDePasse"
-                  name="confirmMotDePasse"
-                  type="password"
-                  autoComplete="new-password"
-                  required
-                  className="block w-full rounded-lg border-0 py-2.5 pl-10 pr-3 text-slate-900 ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-public-blue sm:text-sm sm:leading-6"
-                  placeholder="Confirmer le mot de passe"
-                  value={formData.confirmMotDePasse}
-                  onChange={handleChange}
-                />
-              </div>
+              <input
+                name="nom"
+                type="text"
+                required
+                className="block w-full rounded-xl border-0 py-2.5 pl-10 pr-3 text-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 transition"
+                placeholder="Ex : Moussa Ouédraogo"
+                value={formData.nom}
+                onChange={handleChange}
+              />
             </div>
           </div>
 
-          {/* Règles du mot de passe */}
-          <div className="rounded-lg bg-slate-50 px-4 py-3">
-            <p className="text-xs font-medium text-slate-600 mb-1">Règles :</p>
-            <ul className="space-y-1">
+          {/* Champ Email */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Adresse Email *</label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                <Mail className="h-4 w-4 text-slate-400" />
+              </div>
+              <input
+                name="email"
+                type="email"
+                required
+                className="block w-full rounded-xl border-0 py-2.5 pl-10 pr-3 text-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 transition"
+                placeholder="nom@sante.gov.bf"
+                value={formData.email}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          {/* Champ Mot de passe */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Mot de passe *</label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                <Lock className="h-4 w-4 text-slate-400" />
+              </div>
+              <input
+                name="motDePasse"
+                type="password"
+                required
+                className="block w-full rounded-xl border-0 py-2.5 pl-10 pr-3 text-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 transition"
+                placeholder="Min. 6 caractères"
+                value={formData.motDePasse}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          {/* Champ Confirmation mot de passe */}
+          <div>
+            <label className="block text-xs font-semibold text-slate-700 mb-1.5">Confirmer le mot de passe *</label>
+            <div className="relative">
+              <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5">
+                <Lock className="h-4 w-4 text-slate-400" />
+              </div>
+              <input
+                name="confirmMotDePasse"
+                type="password"
+                required
+                className="block w-full rounded-xl border-0 py-2.5 pl-10 pr-3 text-sm ring-1 ring-inset ring-slate-300 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-600 transition"
+                placeholder="Confirmer le mot de passe"
+                value={formData.confirmMotDePasse}
+                onChange={handleChange}
+              />
+            </div>
+          </div>
+
+          {/* Règles de validation en direct */}
+          <div className="rounded-xl bg-slate-50 p-3 ring-1 ring-slate-100">
+            <p className="text-[11px] font-semibold text-slate-600 mb-1">Critères du compte :</p>
+            <div className="space-y-1">
               {[
                 { label: 'Au moins 6 caractères', valid: formData.motDePasse.length >= 6 },
-                { label: 'Les mots de passe correspondent', valid: formData.motDePasse && formData.motDePasse === formData.confirmMotDePasse },
+                { label: 'Les mots de passe correspondent', valid: Boolean(formData.motDePasse && formData.motDePasse === formData.confirmMotDePasse) },
               ].map(({ label, valid }) => (
-                <li key={label} className={`flex items-center gap-1.5 text-xs ${valid ? 'text-green-600' : 'text-slate-400'}`}>
+                <div key={label} className={`flex items-center gap-1.5 text-xs ${valid ? 'text-green-600 font-medium' : 'text-slate-400'}`}>
                   <CheckCircle className={`h-3.5 w-3.5 ${valid ? 'text-green-500' : 'text-slate-300'}`} />
-                  {label}
-                </li>
+                  <span>{label}</span>
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
 
-          <div>
-            <button
-              type="submit"
-              disabled={isLoading}
-              className={`flex w-full justify-center rounded-lg bg-public-blue px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-public-dark focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-public-blue transition-all ${isLoading ? 'opacity-70 cursor-not-allowed' : ''}`}
-            >
-              {isLoading ? (
-                <span className="flex items-center">
-                  <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  Inscription en cours...
-                </span>
-              ) : (
-                "S'inscrire"
-              )}
-            </button>
-          </div>
+          <button
+            type="submit"
+            disabled={isLoading}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-700 px-4 py-2.5 text-sm font-semibold text-white shadow-md hover:bg-blue-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-700 transition-all disabled:opacity-60"
+          >
+            {isLoading ? 'Inscription en cours...' : (
+              <>
+                <span>Créer mon compte</span>
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
+          </button>
 
-          <div className="text-center">
-            <span className="text-sm text-slate-600">Vous avez déjà un compte ? </span>
-            <Link to="/login" className="text-sm font-medium text-public-blue hover:text-public-dark">
+          <div className="text-center pt-2 border-t border-slate-100">
+            <span className="text-xs text-slate-500">Vous avez déjà un compte ? </span>
+            <Link to="/login" className="text-xs font-semibold text-blue-700 hover:underline">
               Se connecter
             </Link>
           </div>

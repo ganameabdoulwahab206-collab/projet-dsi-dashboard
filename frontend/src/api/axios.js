@@ -42,16 +42,15 @@ api.interceptors.response.use(
     return response;
   },
   (error) => {
-    // Si l'erreur provient du serveur (status 4xx ou 5xx)
     if (error.response) {
       const { status } = error.response;
       
-      if (status === 401 || status === 403) {
-        // Token expiré ou droits insuffisants
+      // Rediriger vers /login UNIQUEMENT si le token est expiré/invalide (401)
+      // Un 403 = accès interdit mais session valide (ne pas déconnecter)
+      if (status === 401) {
         localStorage.removeItem('token');
         localStorage.removeItem('user');
         
-        // Redirection brutale vers le login si on n'y est pas déjà
         if (window.location.pathname !== '/login') {
           window.location.href = '/login';
         }

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { X, Send, Clock, User, AlertTriangle } from 'lucide-react';
 import api from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
+import toast from 'react-hot-toast';
 
 const TacheDetailModal = ({ tache, onClose, onStatusChange }) => {
   const { user } = useAuth();
@@ -37,9 +38,10 @@ const TacheDetailModal = ({ tache, onClose, onStatusChange }) => {
       });
       setCommentaires([...commentaires, response.data]);
       setNouveauCommentaire('');
+      toast.success('Commentaire ajouté.');
     } catch (error) {
       console.error('Erreur ajout commentaire', error);
-      alert('Erreur lors de l\'ajout du commentaire.');
+      toast.error('Erreur lors de l\'ajout du commentaire.');
     }
   };
 
@@ -96,15 +98,34 @@ const TacheDetailModal = ({ tache, onClose, onStatusChange }) => {
 
               <p className="text-sm text-slate-800 whitespace-pre-wrap">{tache.description}</p>
               
-              <div className="mt-4 flex items-center text-xs text-slate-500">
-                <Clock className="mr-1.5 h-4 w-4 text-slate-400" />
-                Échéance : <strong className="ml-1">{tache.dateEcheance ? new Date(tache.dateEcheance).toLocaleDateString('fr-FR') : 'Non définie'}</strong>
-                
-                {tache.dateEcheance && new Date(tache.dateEcheance) < new Date() && tache.statut !== 'TERMINEE' && (
-                  <span className="ml-3 flex items-center text-gov-red font-semibold">
-                    <AlertTriangle className="mr-1 h-4 w-4" /> En retard
-                  </span>
-                )}
+              <div className="mt-4 space-y-2">
+                {/* Assignation */}
+                <div className="flex items-center text-xs text-slate-500">
+                  <User className="mr-1.5 h-4 w-4 text-slate-400" />
+                  Assignée à :&nbsp;
+                  {tache.utilisateur ? (
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 px-2.5 py-0.5 text-xs font-semibold text-blue-700 ring-1 ring-blue-200">
+                      <span className="flex h-4 w-4 items-center justify-center rounded-full bg-blue-700 text-[9px] font-bold text-white">
+                        {tache.utilisateur.nom?.charAt(0)?.toUpperCase()}
+                      </span>
+                      {tache.utilisateur.nom}
+                    </span>
+                  ) : (
+                    <span className="italic text-slate-400">Non assignée</span>
+                  )}
+                </div>
+
+                {/* Échéance */}
+                <div className="flex items-center text-xs text-slate-500">
+                  <Clock className="mr-1.5 h-4 w-4 text-slate-400" />
+                  Échéance :&nbsp;<strong>{tache.dateEcheance ? new Date(tache.dateEcheance).toLocaleDateString('fr-FR') : 'Non définie'}</strong>
+                  
+                  {tache.dateEcheance && new Date(tache.dateEcheance) < new Date() && tache.statut !== 'TERMINEE' && (
+                    <span className="ml-3 flex items-center text-red-600 font-semibold">
+                      <AlertTriangle className="mr-1 h-4 w-4" /> En retard
+                    </span>
+                  )}
+                </div>
               </div>
             </div>
 

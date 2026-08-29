@@ -9,6 +9,9 @@
 # Ignore backend build files
 backend/target/
 backend/*.log
+backend/logs/
+*.log
+*.gz
 backend/hs_err_pid*.log
 backend/replay_pid*.log
 

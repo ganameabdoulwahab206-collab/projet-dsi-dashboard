@@ -3,6 +3,7 @@ package ma.gov.sante.dsi.model;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 
 import java.util.ArrayList;
@@ -26,7 +27,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"utilisateurs", "projets"}) // Éviter la récursion infinie dans les logs
+@ToString(exclude = {"utilisateurs", "projets"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Departement {
 
     /** Identifiant unique auto-généré */
@@ -56,15 +58,13 @@ public class Departement {
 
     /**
      * Liste des utilisateurs appartenant à ce département.
-     * mappedBy = "departement" → la clé étrangère est dans la table Utilisateur.
-     * cascade = PERSIST, MERGE → les opérations de sauvegarde se propagent.
-     * orphanRemoval = false → un utilisateur supprimé du département n'est pas supprimé.
      */
     @OneToMany(
             mappedBy = "departement",
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY
     )
+    @JsonIgnoreProperties({"departement", "taches", "motDePasse"})
     @Builder.Default
     private List<Utilisateur> utilisateurs = new ArrayList<>();
 
@@ -76,6 +76,7 @@ public class Departement {
             cascade = {CascadeType.PERSIST, CascadeType.MERGE},
             fetch = FetchType.LAZY
     )
+    @JsonIgnoreProperties({"departement", "taches"})
     @Builder.Default
     private List<Projet> projets = new ArrayList<>();
 

@@ -2,6 +2,7 @@ package ma.gov.sante.dsi.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import ma.gov.sante.dsi.model.enums.StatutProjet;
 
@@ -32,7 +33,8 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@ToString(exclude = {"taches"}) // Exclure les collections pour éviter les N+1 dans les logs
+@ToString(exclude = {"taches"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Projet {
 
     /** Identifiant unique auto-généré */
@@ -101,6 +103,7 @@ public class Projet {
             referencedColumnName = "id",
             foreignKey = @ForeignKey(name = "fk_projet_departement")
     )
+    @JsonIgnoreProperties({"projets", "utilisateurs"})
     private Departement departement;
 
     /**
@@ -114,6 +117,7 @@ public class Projet {
             orphanRemoval = true,
             fetch = FetchType.LAZY
     )
+    @JsonIgnoreProperties({"projet"})
     @Builder.Default
     private List<Tache> taches = new ArrayList<>();
 

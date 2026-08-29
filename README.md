@@ -62,12 +62,12 @@ L'API tournera sur `http://localhost:8080/api`.
 
 #### 2. Frontend
 ```bash
-cd frontend
+c
 # Installer les dépendances
 npm install
 
 # Lancer le serveur de développement
-npm run dev
+c
 ```
 Le frontend sera accessible (généralement) sur `http://localhost:5173`.
 
